@@ -76,7 +76,9 @@ class Herb(Reagent):
         :return: None
         :rtype:
         """
-        pass
+        self.__grimy = False
+        self.potency = self.potency * 2.5
+        print("leads to a not grimy herb,  multiply its existing potency by 2.5")
 
     @property
     def grimy(self) -> bool:
@@ -111,7 +113,12 @@ class Catalyst(Reagent):
         :return: None
         :rtype:
         """
-        pass
+        if self.__quality < 8.9:
+            self.__quality += 1.1
+            print("the quality of catalyst " + self.getName() + "is increased by 1.1")
+        else:
+            self.__quality = 10
+            print("it cannot be refined any further")
 
     def getQuality(self) -> float:
         """
