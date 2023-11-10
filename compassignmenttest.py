@@ -47,10 +47,14 @@ class TestHerb(unittest.TestCase):
 class TestCatalyst(unittest.TestCase):
 
     def test_init(self):
-        pass
+        catalyst = Catalyst("Eye of Newt", 5, 7)
+        self.assertEqual(catalyst.getName(), "Eye of Newt")
+        self.assertEqual(catalyst.potency, 5)
 
     def test_refine(self):
-        pass
+        catalyst = Catalyst("Eye of Newt", 5, 7)
+        catalyst.refine()
+        self.assertEqual(catalyst.getQuality(), 8.1)
 
 class TestSuperPotion(unittest.TestCase):
 
