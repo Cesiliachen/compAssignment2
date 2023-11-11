@@ -36,13 +36,21 @@ class TestAlchemist(unittest.TestCase):
 class TestHerb(unittest.TestCase):
 
     def test_init(self):
-        pass
+        herb = Herb("Irit", 4)
+        self.assertEqual(herb.getName(), "Irit")
+        self.assertEqual(herb.potency, 4)
 
     def test_refine(self):
-        pass
+        herb = Herb("Arbuck", 9)
+        herb.refine()
+        self.assertEqual(herb.potency, 9 * 2.5)
+        self.assertEqual(herb.grimy, False)
 
     def test_set_get(self):
-        pass
+        herb = Herb("Arbuck", 9)
+        self.assertEqual(herb.grimy, True)
+        herb.grimy = False
+        self.assertEqual(herb.grimy, False)
 
 class TestCatalyst(unittest.TestCase):
 
