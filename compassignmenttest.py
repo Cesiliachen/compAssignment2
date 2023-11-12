@@ -67,13 +67,21 @@ class TestCatalyst(unittest.TestCase):
 class TestSuperPotion(unittest.TestCase):
 
     def test_init(self):
-        pass
+        super_attack = SuperPotion("Super Attack", "attack", Herb("Irit", 4), Catalyst("Eye of Newt", 5, 7))
+        self.assertEqual(super_attack.getName(), "Super Attack")
+        self.assertEqual(super_attack.getStat(), "attack")
+        self.assertEqual(super_attack.boost, 0)
 
     def test_calculateBoost(self):
-        pass
+        super_attack = SuperPotion("Super Attack", "attack", Herb("Irit", 4), Catalyst("Eye of Newt", 5, 7))
+        super_attack.calculateBoost()
+        # self.__herb.potency + (self.__catalyst.potency * self.__catalyst.getQuality()) * 1.5
+        self.assertEqual(super_attack.boost, 4 + 5 * 7 * 1.5)
 
     def test_set_get(self):
-        pass
+        super_attack = SuperPotion("Super Attack", "attack", Herb("Irit", 4), Catalyst("Eye of Newt", 5, 7))
+        self.assertEqual(super_attack.getHerb().getName(), "Irit")
+        self.assertEqual(super_attack.getCatalyst().getName(), "Eye of Newt")
 
 class TestExtremePotion(unittest.TestCase):
 
