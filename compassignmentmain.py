@@ -319,7 +319,36 @@ class Laboratory:
         :return:
         :rtype:
         """
-        pass
+        if type == "Super":
+            herb_obj = None
+            for i, herb in enumerate(self.__herbs):
+                if herb.getName() == primarylngredient:
+                    herb_obj = herb
+                    del self.__herbs[i]
+                    break
+            catalyst_obj = None
+            for i, catalyst in enumerate(self.__catalysts):
+                if catalyst.getName() == secondarylngredient:
+                    catalyst_obj = catalyst
+                    del self.__catalysts[i]
+                    break
+            self.__potions.append(SuperPotion(name, stat, herb_obj, catalyst_obj))
+        else:
+            reagent_obj = None
+            for i, herb in enumerate(self.__herbs):
+                if herb.getName() == primarylngredient:
+                    reagent_obj = herb
+                    del self.__herbs[i]
+                    break
+            if reagent_obj is None:
+                for i, catalyst in enumerate(self.__catalysts):
+                    if catalyst.getName() == primarylngredient:
+                        reagent_obj = catalyst
+                        del self.__catalysts[i]
+                        break
+            for potion in self.__potions:
+                if potion.getName() == secondarylngredient:
+                    self.__potions.append(ExtremePotion(name, stat, reagent_obj, potion))
 
 
     def addReagent(self, reagent: Reagent, amount: int):
@@ -332,7 +361,12 @@ class Laboratory:
         :return:
         :rtype:
         """
-        pass
+        if isinstance(reagent, Herb):
+            for i in range(amount):
+                self.__herbs.append(reagent)
+        if isinstance(reagent, Catalyst):
+            for i in range(amount):
+                self.__catalysts.append(reagent)
 
 
 class Alchemist:
@@ -407,7 +441,15 @@ class Alchemist:
         :return:
         :rtype:
         """
-        pass
+        tmp1 = recipe.split(',')
+        tmp2 = tmp1[0].split(':')
+        tmp = [tmp2[0], tmp2[1], tmp1[1]]
+        super_or_extream = tmp[0].split(' ')
+        # Attack Super super  Irit  Eye of Newt
+        # print("aaaa",super_or_extream[1], super_or_extream[0], super_or_extream[1].lower(),
+        #                                tmp[1], tmp[2])
+        self.getLaboratory().mixPotion(tmp2[0], super_or_extream[0], super_or_extream[1].lower(),
+                                       tmp[1], tmp[2])
 
 
     def drinkPotion(self, potion: Potion):
@@ -418,7 +460,30 @@ class Alchemist:
         :return:
         :rtype:
         """
-        pass
+        stas = potion.getStat()
+        if stas == "attack":
+            self.__attack += potion.boost
+            print("drink potion, add attack by " + str(potion.boost))
+        if stas == "strength":
+            self.__strength += potion.boost
+            print("drink potion, add strength by " + str(potion.boost))
+        if stas == "defence":
+            self.__defence += potion.boost
+            print("drink potion, add defence by " + str(potion.boost))
+        if stas == "magic":
+            self.__magic += potion.boost
+            print("drink potion, add magic by " + str(potion.boost))
+        if stas == "ranging":
+            self.__ranged += potion.boost
+            print("drink potion, add ranged by " + str(potion.boost))
+        if stas == "necromancy":
+            self.__necromancy += potion.boost
+            print("drink potion, add necromancy by " + str(potion.boost))
+
+        for i, p in enumerate(self.getLaboratory().potions):
+            if p.getName() == potion.getName():
+                del self.getLaboratory().potions[i]
+                break
 
     def collectReagent(self, reagent: Reagent, amount: int):
         """
