@@ -86,13 +86,25 @@ class TestSuperPotion(unittest.TestCase):
 class TestExtremePotion(unittest.TestCase):
 
     def test_init(self):
-        pass
+        super_attack = SuperPotion("Super Attack", "attack", Herb("Irit", 4), Catalyst("Eye of Newt", 5, 7))
+        extreme_attack = ExtremePotion("Extreme Attack", "attack", Catalyst("Avantoe", 6, 3), super_attack)
+        self.assertEqual(extreme_attack.getName(), "Extreme Attack")
+        self.assertEqual(extreme_attack.getStat(), "attack")
+        self.assertEqual(extreme_attack.boost, 0)
 
     def test_calculateBoost(self):
-        pass
+        super_attack = SuperPotion("Super Attack", "attack", Herb("Irit", 4), Catalyst("Eye of Newt", 5, 7))
+        super_attack.calculateBoost()
+        extreme_attack = ExtremePotion("Extreme Attack", "attack", Catalyst("Avantoe", 6, 3), super_attack)
+        extreme_attack.calculateBoost()
+        # (self.__reagent.potency * self.__potion.boost) * 3.0
+        self.assertEqual(extreme_attack.boost, 6 * super_attack.boost * 3)
 
     def test_set_get(self):
-        pass
+        super_attack = SuperPotion("Super Attack", "attack", Herb("Irit", 4), Catalyst("Eye of Newt", 5, 7))
+        extreme_attack = ExtremePotion("Extreme Attack", "attack", Catalyst("Avantoe", 6, 3), super_attack)
+        self.assertEqual(extreme_attack.getReagent().getName(), "Avantoe")
+        self.assertEqual(isinstance(extreme_attack.getReagent(), Reagent), True)
 
 class TestLaboratory(unittest.TestCase):
 
