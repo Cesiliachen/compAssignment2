@@ -80,22 +80,110 @@ def initRecipes():
 class TestAlchemist(unittest.TestCase):
 
     def test_init(self):
-        pass
+        lab = Laboratory(initOptions(), initHerbs(), initCatalysts())
+        alchemist = Alchemist(attack=0, strength=0, defence=0, magic=0, ranged=0, necromancy=0,
+                              laboratory=lab, recipes=initRecipes())
+        self.assertEqual(alchemist.getRecipes(), initRecipes())
 
     def test_getLaboratory(self):
-        pass
+        lab = Laboratory(initOptions(), initHerbs(), initCatalysts())
+        alchemist = Alchemist(attack=0, strength=0, defence=0, magic=0, ranged=0, necromancy=0,
+                              laboratory=lab, recipes=initRecipes())
+        self.assertEqual(alchemist.getLaboratory(), lab)
 
     def test_mixPotion(self):
-        pass
+        recipe = "Super Attack: Irit, Eye of Newt"
+        lab = Laboratory([], initHerbs(), initCatalysts())
+        alchemist = Alchemist(attack=0, strength=0, defence=0, magic=0, ranged=0, necromancy=0,
+                              laboratory=lab, recipes=initRecipes())
+        alchemist.mixPotion(recipe)
+        self.assertEqual(alchemist.getLaboratory().potions[0].getStat(), 'attack')
+        self.assertEqual(alchemist.getLaboratory().potions[0].getName(), 'Super Attack')
 
     def test_drinkPotion(self):
-        pass
+        lab = Laboratory(initOptions(), initHerbs(), initCatalysts())
+        alchemist = Alchemist(attack=0, strength=0, defence=0, magic=0, ranged=0, necromancy=0,
+                              laboratory=lab, recipes=initRecipes())
+        super_attack = SuperPotion("Attack", "attack", Herb("Irit", 4), Catalyst("Eye of Newt", 5, 7))
+        super_attack.calculateBoost()
+        alchemist.drinkPotion(super_attack)
+        self.assertEqual(alchemist.attack, super_attack.boost)
+
+        super_strength = SuperPotion("Strength", "strength", Herb("Kwuarm", 6), Catalyst("Limpwurt Root", 4, 10))
+        super_strength.calculateBoost()
+        alchemist.drinkPotion(super_strength)
+        self.assertEqual(alchemist.strength, super_strength.boost)
+
+        super_defence = SuperPotion("Defence", "defence", Herb("Cadantine", 9), Catalyst("White Berries", 7, 9))
+        super_defence.calculateBoost()
+        alchemist.drinkPotion(super_defence)
+        self.assertEqual(alchemist.defence, super_defence.boost)
+
+        super_magic = SuperPotion("Magic", "magic", Herb("Lantadyme", 10), Catalyst("Potato Cactus", 2, 5))
+        super_magic.calculateBoost()
+        alchemist.drinkPotion(super_magic)
+        self.assertEqual(alchemist.magic, super_magic.boost)
+
+        super_ranging = SuperPotion("Ranging", "ranging", Herb("Dwarf Weed", 2), Catalyst("Wine of Zamorak", 7, 6))
+        super_ranging.calculateBoost()
+        alchemist.drinkPotion(super_ranging)
+        self.assertEqual(alchemist.ranged, super_ranging.boost)
+
+        super_necromancy = SuperPotion("Necromancy", "necromancy", Herb("Arbuck", 9), Catalyst("Blood of Orcus", 9, 3))
+        super_necromancy.calculateBoost()
+        alchemist.drinkPotion(super_necromancy)
+        self.assertEqual(alchemist.necromancy, super_necromancy.boost)
+
+        alchemist = Alchemist(attack=0, strength=0, defence=0, magic=0, ranged=0, necromancy=0,
+                              laboratory=lab, recipes=initRecipes())
+        extreme_attack = ExtremePotion("Attack", "attack", Catalyst("Avantoe", 6, 3), super_attack)
+        extreme_attack.calculateBoost()
+        alchemist.drinkPotion(extreme_attack)
+        self.assertEqual(alchemist.attack, extreme_attack.boost)
+
+        extreme_strength = ExtremePotion("Strength", "strength", Herb("Dwarf Weed", 6), super_strength)
+        extreme_strength.calculateBoost()
+        alchemist.drinkPotion(extreme_strength)
+        self.assertEqual(alchemist.strength, extreme_strength.boost)
+
+        extreme_defence = ExtremePotion("Defence", "defence", Herb("Lantadyme", 9), super_defence)
+        extreme_defence.calculateBoost()
+        alchemist.drinkPotion(extreme_defence)
+        self.assertEqual(alchemist.defence, extreme_defence.boost)
+
+        extreme_magic = ExtremePotion("Magic", "magic", Herb("Ground Mud Rune", 6), super_magic)
+        extreme_magic.calculateBoost()
+        alchemist.drinkPotion(extreme_magic)
+        self.assertEqual(alchemist.magic, extreme_magic.boost)
+
+        extreme_ranging = ExtremePotion("Ranging", "ranging", Herb("Grenwall Spike", 6), super_ranging)
+        extreme_ranging.calculateBoost()
+        alchemist.drinkPotion(extreme_ranging)
+        self.assertEqual(alchemist.ranged, extreme_ranging.boost)
+
+        extreme_necromancy = ExtremePotion("Necromancy", "necromancy", Herb("Ground Miasma Rune", 6), super_necromancy)
+        extreme_necromancy.calculateBoost()
+        alchemist.drinkPotion(extreme_necromancy)
+        self.assertEqual(alchemist.necromancy, extreme_necromancy.boost)
 
     def test_collectReagent(self):
-        pass
+        reagent = Catalyst("Eye of Newt", 5, 7)
+        lab = Laboratory([], [], [])
+        alchemist = Alchemist(attack=0, strength=0, defence=0, magic=0, ranged=0, necromancy=0,
+                              laboratory=lab, recipes=initRecipes())
+        alchemist.collectReagent(reagent, 3)
+        self.assertEqual(3, len(alchemist.getLaboratory().catalysts))
+        self.assertEqual("Eye of Newt", alchemist.getLaboratory().catalysts[0].getName())
 
     def test_refineReagents(self):
-        pass
+        lab = Laboratory([], initHerbs(), initCatalysts())
+        alchemist = Alchemist(attack=0, strength=0, defence=0, magic=0, ranged=0, necromancy=0,
+                              laboratory=lab, recipes=initRecipes())
+        alchemist.refineReagents()
+        self.assertEqual(alchemist.getLaboratory().herbs[0].grimy, False)
+        self.assertEqual(alchemist.getLaboratory().herbs[0].potency, 10)
+        self.assertEqual(alchemist.getLaboratory().catalysts[3].getQuality(), 6.1)
+        self.assertEqual(alchemist.getLaboratory().catalysts[0].getQuality(), 8.1)
 
 class TestHerb(unittest.TestCase):
 
